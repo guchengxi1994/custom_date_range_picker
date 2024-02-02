@@ -40,10 +40,10 @@ class CustomDateRangePicker extends StatefulWidget {
   final Color backgroundColor;
 
   /// A callback function that is called when the user applies the selected date range.
-  final Function(DateTime, DateTime) onApplyClick;
+  final Function(DateTime, DateTime)? onApplyClick;
 
   /// A callback function that is called when the user cancels the selection of the date range.
-  final Function() onCancelClick;
+  final Function()? onCancelClick;
 
   const CustomDateRangePicker({
     Key? key,
@@ -51,11 +51,11 @@ class CustomDateRangePicker extends StatefulWidget {
     this.initialEndDate,
     required this.primaryColor,
     required this.backgroundColor,
-    required this.onApplyClick,
+    this.onApplyClick,
     this.barrierDismissible = true,
     required this.minimumDate,
     required this.maximumDate,
-    required this.onCancelClick,
+    this.onCancelClick,
   }) : super(key: key);
 
   @override
@@ -237,8 +237,11 @@ class CustomDateRangePickerState extends State<CustomDateRangePicker>
                                   ),
                                   onPressed: () {
                                     try {
-                                      widget.onCancelClick();
-                                      Navigator.pop(context);
+                                      if (widget.onCancelClick != null) {
+                                        widget.onCancelClick!();
+                                      }
+
+                                      Navigator.of(context).pop((null, null));
                                     } catch (_) {}
                                   },
                                   child: const Center(
@@ -277,8 +280,13 @@ class CustomDateRangePickerState extends State<CustomDateRangePicker>
                                   ),
                                   onPressed: () {
                                     try {
-                                      widget.onApplyClick(startDate!, endDate!);
-                                      Navigator.pop(context);
+                                      if (widget.onApplyClick != null) {
+                                        widget.onApplyClick!(
+                                            startDate!, endDate!);
+                                      }
+
+                                      Navigator.of(context)
+                                          .pop((startDate!, endDate!));
                                     } catch (_) {}
                                   },
                                   child: const Center(
